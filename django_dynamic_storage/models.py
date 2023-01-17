@@ -9,6 +9,7 @@ from django.db.models.fields.files import (
     ImageFileDescriptor,
 )
 
+from .signals import pre_dynamic_file_save
 from .storage import Storage, prob
 
 # {"name": str, "storage": prob}
@@ -42,13 +43,19 @@ class DynamicFieldFile(FieldFile):
             if self._current_storage
             else True
         )
+
+        pre_dynamic_file_save.send(
+            sender=self.instance.__class__,
+            instance=self.instance,
+            field_file=self,
+            to_storage=self.destination_storage,
+        )
+
         storage = self.destination_storage or self._current_storage or self.storage
 
         name = self.field.generate_filename(self.instance, name)
         self.name = storage.save(name, content, max_length=self.field.max_length)
-        self.storage = (
-            self._current_storage
-        ) = self.destination_storage = storage
+        self.storage = self._current_storage = self.destination_storage = storage
 
         # This is the replacement for 'setattr(self.instance, self.field.attname, self.name)'
         # because instance is not wrote to db yet, reinstantiating will break setting the right storage
