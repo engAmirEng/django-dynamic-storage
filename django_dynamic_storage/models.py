@@ -8,9 +8,8 @@ from django.db.models.fields.files import (
     ImageFieldFile,
     ImageFileDescriptor,
 )
-from django.utils.translation import gettext_lazy as _
 
-from say.dynamic_storage.storage import Storage, prob
+from .storage import Storage, prob
 
 # {"name": str, "storage": prob}
 jsonfield = Dict[str, Any]
@@ -19,19 +18,55 @@ jsonfield = Dict[str, Any]
 class DynamicFieldFile(FieldFile):
     def __init__(self, instance, field, name, storage: Storage = None):
         super(DynamicFieldFile, self).__init__(instance, field, name)
-        self.current_storage = storage
+        self._current_storage = (
+            storage  # keep track of the storage the file is actually at
+        )
         self.storage = storage or self.storage
+
+        # To be able to save the file to the appropriate storage
+        # if providing the save() method with storage argument is not possible
+        self.destination_storage = None
 
     def dictionary(self) -> jsonfield:
         """Value to be stored in JSONField"""
         return {"name": str(self), "storage": self.storage.uninit()}
 
-    def save(self, name, content, storage: Storage = None, save=True):
-        """This is the dynamic storage save"""
-        assert self.current_storage == storage if self.current_storage else True
-        if storage:
-            self.storage = storage
-        super(DynamicFieldFile, self).save(name, content, save=save)
+    def save(self, name, content, /, storage: Storage = None, save=True):
+        """
+        This is the dynamic storage save
+        """
+        self.destination_storage = storage or self.destination_storage
+        # Ensure we are not trying to move obj between storages (yet)
+        assert (
+            self._current_storage == self.destination_storage
+            if self._current_storage
+            else True
+        )
+        storage = self.destination_storage or self._current_storage or self.storage
+
+        name = self.field.generate_filename(self.instance, name)
+        self.name = storage.save(name, content, max_length=self.field.max_length)
+        self.storage = (
+            self._current_storage
+        ) = self.destination_storage = storage
+
+        # This is the replacement for 'setattr(self.instance, self.field.attname, self.name)'
+        # because instance is not wrote to db yet, reinstantiating will break setting the right storage
+        getattr(self.instance, self.field.attname).name = self.name
+
+        self._committed = True
+
+        # Save the object because it has changed, unless save is False
+        if save:
+            self.instance.save()
+
+    def __getstate__(self):
+        # Don't know how to get the state related to storage
+        raise NotImplementedError
+
+    def __setstate__(self, state):
+        # __getstate__ is not implemented
+        raise NotImplementedError
 
 
 class DynamicFileDescriptor(FileDescriptor):
@@ -77,7 +112,11 @@ class DynamicFileField(models.JSONField, models.FileField):
 
 
 class DynamicImageFieldFile(ImageFieldFile, DynamicFieldFile):
-    pass
+    def save(self, *args, **kwargs):
+        super(DynamicImageFieldFile, self).save(*args, **kwargs)
+        # Since reinstantiating the FieldFile after calling save() is not the case anymore
+        # (due to delete 'setattr(self.instance, self.field.attname, self.name)')
+        self.field.update_dimension_fields(self.instance, force=True)
 
 
 class DynamicImageFileDescriptor(ImageFileDescriptor, DynamicFileDescriptor):
