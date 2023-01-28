@@ -4,13 +4,13 @@ from abc import abstractmethod, ABC
 import importlib
 from typing import Dict, Any, Callable
 
-from django.core.files.storage import Storage as BaseStorage
+from django.core.files.storage import Storage
 
 # {"import_path": str, "constructor": dict}
 prob = Dict[str, Any]
 
 
-class Storage(ABC, BaseStorage):
+class DynamicStorageMixin(ABC):
     @abstractmethod
     def init_params(self) -> dict:
         """parameters for calling __init__ on storage class"""
@@ -24,7 +24,7 @@ class Storage(ABC, BaseStorage):
         }
 
     @classmethod
-    def init(cls, probs: prob) -> Storage:
+    def init(cls, probs: prob) -> DynamicStorageMixin:
         """initialize storage"""
         module_name = ".".join(probs["import_path"].split(".")[:-1])
         class_name = probs["import_path"].split(".")[-1]
@@ -32,3 +32,7 @@ class Storage(ABC, BaseStorage):
             importlib.import_module(module_name), class_name
         )
         return StorageClass(**probs["constructor"])
+
+
+class DynamicStorage(DynamicStorageMixin, Storage):
+    ...

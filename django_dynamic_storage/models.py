@@ -10,14 +10,14 @@ from django.db.models.fields.files import (
 )
 
 from .signals import pre_dynamic_file_save
-from .storage import Storage, prob
+from .storage import prob, DynamicStorage
 
 # {"name": str, "storage": prob}
 jsonfield = Dict[str, Any]
 
 
 class DynamicFieldFile(FieldFile):
-    def __init__(self, instance, field, name, storage: Storage = None):
+    def __init__(self, instance, field, name, storage: DynamicStorage = None):
         super(DynamicFieldFile, self).__init__(instance, field, name)
         self._current_storage = (
             storage  # keep track of the storage the file is actually at
@@ -32,7 +32,7 @@ class DynamicFieldFile(FieldFile):
         """Value to be stored in JSONField"""
         return {"name": str(self), "storage": self.storage.uninit()}
 
-    def save(self, name, content, /, storage: Storage = None, save=True):
+    def save(self, name, content, /, storage: DynamicStorage = None, save=True):
         """
         This is the dynamic storage save
         """
@@ -88,7 +88,9 @@ class DynamicFileDescriptor(FileDescriptor):
         # handle dict().
         if isinstance(file, dict):
             storage_prob: prob = file.get("storage")
-            storage = Storage.init(storage_prob) if storage_prob else storage_prob
+            storage = (
+                DynamicStorage.init(storage_prob) if storage_prob else storage_prob
+            )
             attr = self.field.attr_class(
                 instance, self.field, file.get("name"), storage
             )
