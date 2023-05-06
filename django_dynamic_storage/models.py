@@ -106,12 +106,14 @@ class DynamicFileField(models.JSONField, models.FileField):
 
     descriptor_class = DynamicFileDescriptor
 
-    def get_prep_value(self, value):
+    def get_db_prep_value(self, value, connection, prepared=False):
         if value is None:
             return value
         if not isinstance(value, dict):
             value = value.dictionary()
-        return models.JSONField.get_prep_value(self, value)
+        return super(DynamicFileField, self).get_db_prep_value(
+            value, connection, prepared
+        )
 
     def formfield(self, **kwargs):
         return models.FileField.formfield(self, **kwargs)
