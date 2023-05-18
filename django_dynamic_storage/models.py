@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Any, Dict
 
 from django.db import models
 from django.db.models.fields.files import (
@@ -10,7 +10,8 @@ from django.db.models.fields.files import (
 )
 
 from .signals import pre_dynamic_file_save
-from .storage import prob, DynamicStorage
+from .storage import DynamicStorage, prob
+
 
 # {"name": str, "storage": prob}
 jsonfield = Dict[str, Any]
