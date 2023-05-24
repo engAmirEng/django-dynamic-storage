@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "django-dynamic-storage"
+version = "0.1.0"
+description = "Use and choose storages at runtime based on your logic"
+authors = ["Amir Khalife <eng.amir.bu@gmail.com>"]
+license = "Apache-2.0"
+packages = [{include = "django_dynamic_storage"}]
+
+[tool.poetry.dependencies]
+python = ">=3.8"
+Django = ">=2.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
