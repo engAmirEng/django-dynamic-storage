@@ -1,0 +1,29 @@
+### IDE ###
+
+# JetBrains
+.idea
+# VS Code
+.vscode
+
+### Python ###
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+eggs/
+.eggs/
+*.egg-info/
+*.egg
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
