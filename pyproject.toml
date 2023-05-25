@@ -14,3 +14,11 @@ Django = ">=2.2"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.isort]
+known_first_party="django"
+lines_after_imports=2
+profile = "black"
+py_version=39
+sections="FUTURE,STDLIB,FIRSTPARTY,THIRDPARTY,APPS,LOCALFOLDER"
+
