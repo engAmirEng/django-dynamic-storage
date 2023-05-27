@@ -7,7 +7,7 @@ license = "Apache-2.0"
 packages = [{include = "dynamic_storage"}]
 
 [tool.poetry.dependencies]
-python = ">=3.8"
+python = ">=3.7"
 
 [tool.poetry.group.test.dependencies]
 Django = "^4.2.1"

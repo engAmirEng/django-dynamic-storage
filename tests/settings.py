@@ -13,13 +13,13 @@ ALLOWED_HOSTS = []
 
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    "testapp",
+    "django.contrib.admin.apps.AdminConfig",
+    "django.contrib.auth.apps.AuthConfig",
+    "django.contrib.contenttypes.apps.ContentTypesConfig",
+    "django.contrib.sessions.apps.SessionsConfig",
+    "django.contrib.messages.apps.MessagesConfig",
+    "django.contrib.staticfiles.apps.StaticFilesConfig",
+    "testapp.apps.TestAppConfig",
 ]
 
 MIDDLEWARE = [
@@ -55,9 +55,16 @@ WSGI_APPLICATION = "wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "testt",
+        "USER": "initial",
+        "PASSWORD": "password",
+        "PORT": 5430,
     }
+    # "default": {
+    #     "ENGINE": "django.db.backends.sqlite3",
+    #     "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+    # }
 }
 
 AUTH_USER_MODEL = "testapp.User"
