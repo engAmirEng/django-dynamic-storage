@@ -22,7 +22,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 django_find_project = false
-pythonpath = "tests"
+pythonpath = ". tests"
 DJANGO_SETTINGS_MODULE = "tests.settings"
 
 [tool.isort]
@@ -32,4 +32,3 @@ lines_after_imports=2
 profile = "black"
 py_version=39
 sections="FUTURE,STDLIB,FIRSTPARTY,THIRDPARTY,APPS,LOCALFOLDER"
-
