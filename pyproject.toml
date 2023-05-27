@@ -8,15 +8,26 @@ packages = [{include = "dynamic_storage"}]
 
 [tool.poetry.dependencies]
 python = ">=3.8"
-Django = ">=2.2"
+
+[tool.poetry.group.test.dependencies]
+Django = "^4.2.1"
+pillow = "^9.5.0"
+pytest = "^7.3.1"
+pytest-django = "^4.5.2"
 
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.pytest.ini_options]
+django_find_project = false
+pythonpath = "tests"
+DJANGO_SETTINGS_MODULE = "tests.settings"
+
 [tool.isort]
-known_first_party="django"
+known_first_party="django,pytest"
+known_apps="dynamic_storage"
 lines_after_imports=2
 profile = "black"
 py_version=39
