@@ -17,6 +17,14 @@ class DynamicStorageMixin(ABC):
         """parameters for calling __init__ on storage class"""
         ...
 
+    def __eq__(self, other) -> bool:
+        """
+        how to differentiate two instances of the same storage class
+        Override this for your use case,
+        for example add the comparison based on bucket names
+        """
+        return self.__class__ == other.__class__
+
     def uninit(self) -> prob:
         """get the required properties for future initialization"""
         return {

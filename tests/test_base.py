@@ -58,3 +58,5 @@ class TestBase:
         )
         with pytest.raises(AssertionError):
             obj.file1.save(obj.file1.name, obj.file1.file)
+        obj.file1.destination_storage = ASpecialFileSystemStorage(_DUMMY_CREDENTIAL)
+        obj.file1.save(obj.file1.name, obj.file1.file)
