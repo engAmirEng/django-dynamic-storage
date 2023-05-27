@@ -7,10 +7,11 @@ license = "Apache-2.0"
 packages = [{include = "dynamic_storage"}]
 
 [tool.poetry.dependencies]
-python = ">=3.7"
+python = ">=3.7,<3.12"
 
 [tool.poetry.group.test.dependencies]
-Django = "^4.2.1"
+Django = ">=2.2,<5"
+django-environ = "^0.10.0"
 pillow = "^9.5.0"
 pytest = "^7.3.1"
 pytest-django = "^4.5.2"

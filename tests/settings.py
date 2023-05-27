@@ -1,8 +1,16 @@
 import os
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
+
+import environ
+
 
 BASE_DIR = Path(__file__).resolve().parent
+env = environ.Env(JUST_POSTGRES=(bool, False), DATABASE_URL=(str, "sqlite://:memory:"))
+
+# Take environment variables from .env file if exists
+environ.Env.read_env(os.path.join(BASE_DIR, ".env"))
 
 
 SECRET_KEY = "django-insecure--5frsp!e=r&8bu^p2%)iie!*95keawjm*+7hu*8pk5=cop&+e!"
@@ -53,19 +61,14 @@ TEMPLATES = [
 WSGI_APPLICATION = "wsgi.application"
 
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "testt",
-        "USER": "initial",
-        "PASSWORD": "password",
-        "PORT": 5430,
-    }
-    # "default": {
-    #     "ENGINE": "django.db.backends.sqlite3",
-    #     "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    # }
-}
+DATABASES = {"default": env.db_url("DATABASE_URL")}
+if (
+    env.bool("JUST_POSTGRES")
+    and DATABASES["default"]["ENGINE"] != "django.db.backends.postgresql"
+):
+    raise ImproperlyConfigured(
+        f"`JUST_POSTGRES` is set but engin is {DATABASES['default']['ENGINE']}"
+    )
 
 AUTH_USER_MODEL = "testapp.User"
 
