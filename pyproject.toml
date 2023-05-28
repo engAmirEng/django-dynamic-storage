@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-dynamic-storage"
-version = "0.1.1"
+version = "0.1.2"
 description = "Use and choose storages at runtime based on your logic"
 authors = ["Amir Khalife <eng.amir.bu@gmail.com>"]
 license = "Apache-2.0"
@@ -9,13 +9,7 @@ packages = [{include = "dynamic_storage"}]
 
 [tool.poetry.dependencies]
 python = ">=3.7,<3.12"
-
-[tool.poetry.group.test.dependencies]
 Django = ">=2.2,<5"
-django-environ = "^0.10.0"
-pillow = "^9.5.0"
-pytest = "^7.3.1"
-pytest-django = "^4.5.2"
 
 
 [build-system]
