@@ -1,5 +1,6 @@
 from typing import Any, Dict
 
+import django
 from django.db import models
 from django.db.models.fields.files import (
     FieldFile,
@@ -12,6 +13,11 @@ from django.db.models.fields.files import (
 from .signals import pre_dynamic_file_save
 from .storage import DynamicStorage, prob
 
+
+if django.VERSION >= (3, 1):
+    from django.db.models import JSONField
+else:
+    from django.contrib.postgres.fields import JSONField
 
 # {"name": str, "storage": prob}
 jsonfield = Dict[str, Any]
@@ -100,7 +106,7 @@ class DynamicFileDescriptor(FileDescriptor):
         return instance.__dict__[self.field.attname]
 
 
-class DynamicFileField(models.JSONField, models.FileField):
+class DynamicFileField(JSONField, models.FileField):
     """FileField with json db representation that contain info for dynamic behavior"""
 
     attr_class = DynamicFieldFile

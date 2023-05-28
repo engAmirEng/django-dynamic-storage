@@ -1,0 +1,3 @@
+### Django ###
+*.sqlite3
+media
