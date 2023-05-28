@@ -31,5 +31,5 @@ jobs:
         pip install tox
     - name: Run tox
       env:
-        DATABASE_URL: postgres://postgres:password@postgres:5432/github_actions?conn_max_age=0
+        DATABASE_URL: postgres://postgres:password@127.0.0.1:5432/github_actions?conn_max_age=0
       run: tox
