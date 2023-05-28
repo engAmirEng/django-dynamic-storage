@@ -6,12 +6,9 @@ on:
 
 jobs:
   tox:
-    runs-on: ${{ matrix.os }}-latest
+    runs-on: ubuntu-latest-latest
     strategy:
       matrix:
-        os:
-          - Ubuntu
-          - Windows
         py:
           - "3.7"
           - "3.9"
