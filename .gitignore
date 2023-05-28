@@ -19,6 +19,8 @@ eggs/
 *.egg-info/
 *.egg
 
+/poetry.lock
+
 # Environments
 .env
 .venv
