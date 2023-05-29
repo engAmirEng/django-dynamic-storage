@@ -7,9 +7,13 @@
 
 ## django-dynamic-storage
 
+Have you ever wanted not to store every instance of FileFileds or ImageFileds of a model in one storage or one bucket of a storage?
+
+Now you can, because I wanted that for [my project](https://github.com/SayIfOrg/say_wagtail).
+
 ### prerequisites:
 
-If your django version is earlier than 3.1 (<=3.0) then your database should be PostgreSQL otherwise you are good to go
+If your django version is earlier than 3.1 (<=3.0) then your database should be PostgreSQL otherwise you are good to go.
 
 ### Usage:
 
@@ -32,7 +36,7 @@ class MyDynamicStorage(DynamicStorageMixin, AnyStorage):
 		return {"named_param1": self.named_param1, "named_param2": self.named_param2, ...}
 ```
 
-`AnyStorage` can be a storage that you define yourself or import from [django-storages](https://pypi.org/project/django-storages/)
+`AnyStorage` can be a storage that you define yourself or import from [django-storages](https://pypi.org/project/django-storages/).
 
 in models.py:
 
@@ -83,8 +87,8 @@ instance
 
 Not even a bit!
 
-#### how?
+#### HOW?
 
-we are just using the django's built in `JsonField` instead of `CharField`  to store more data (init\_params output) in addition to the path to the file,
+We are just using the django's built in `JsonField` instead of `CharField`  to store more data (init\_params output) in addition to the path to the file.
 
-so no extra queries, no extra steps, no performance penalty
+so no extra queries, no extra steps, no performance penalty.

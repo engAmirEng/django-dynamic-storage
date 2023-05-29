@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "django-dynamic-storage"
 version = "0.1.3"
-description = "Use and choose storages at runtime based on your logic"
+description = "Use and choose storages at runtime based on your logic for each model FileField instance separately."
 authors = ["Amir Khalife <eng.amir.bu@gmail.com>"]
 license = "Apache-2.0"
 readme = "README.md"
