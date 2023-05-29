@@ -5,6 +5,19 @@ description = "Use and choose storages at runtime based on your logic"
 authors = ["Amir Khalife <eng.amir.bu@gmail.com>"]
 license = "Apache-2.0"
 readme = "README.md"
+repository = "https://github.com/engAmirEng/django-dynamic-storage"
+keywords = ["django", "django-storages", "djangostorage"]
+classifiers = [
+    "Framework :: Django",
+    "Framework :: Django :: 2.2",
+    "Framework :: Django :: 3.0",
+    "Framework :: Django :: 3.1",
+    "Framework :: Django :: 3.2",
+    "Framework :: Django :: 3.2",
+    "Framework :: Django :: 4.0",
+    "Framework :: Django :: 4.1",
+    "Framework :: Django :: 4.2",
+]
 packages = [{include = "dynamic_storage"}]
 
 [tool.poetry.dependencies]
