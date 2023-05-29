@@ -23,7 +23,10 @@ class DynamicStorageMixin(ABC):
         Override this for your use case,
         for example add the comparison based on bucket names
         """
-        return self.__class__ == other.__class__
+        return (
+            self.__class__ == other.__class__
+            and self.init_params() == other.init_params()
+        )
 
     def uninit(self) -> prob:
         """get the required properties for future initialization"""
