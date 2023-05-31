@@ -35,7 +35,7 @@ jobs:
     - name: Install tox and tox-gh
       run: |
         python -m pip install --upgrade pip
-        pip install tox-gh-actions tox
+        pip install tox tox-gh-actions
     - name: Run tox
       env:
         DATABASE_URL: postgres://postgres:password@127.0.0.1:5432/github_actions?conn_max_age=0
