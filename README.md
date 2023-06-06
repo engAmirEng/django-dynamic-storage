@@ -78,7 +78,7 @@ instance
     if not to_storage:
     	# destination_storage is not set, so we set it here
         field_file.destination_storage = MyDynamicStorage(named_param1="something", named_param2="another_thing")
-	elif to_storage == wrong_storage:
+    elif to_storage == wrong_storage:
 		# override the destination_storage set earlier
 		field_file.destination_storage = MyAnotherDynamicStorage(named_param1="foo", named_param2="bar")
 ```
