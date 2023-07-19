@@ -113,11 +113,25 @@ class DynamicFileField(JSONField, models.FileField):
 
     descriptor_class = DynamicFileDescriptor
 
+    call_prep_or_db_pred = (
+        "db_prep" if (4, 2, 0) <= django.VERSION[:3] < (4, 2, 2) else "prep"
+    )
+
+    def get_prep_value(self, value):
+        if self.call_prep_or_db_pred == "prep":
+            if value is None:
+                return value
+            if not isinstance(value, dict):
+                value = value.dictionary()
+            return models.JSONField.get_prep_value(self, value)
+        return super(DynamicFileField, self).get_prep_value(value)
+
     def get_db_prep_value(self, value, connection, prepared=False):
-        if value is None:
-            return value
-        if not isinstance(value, dict):
-            value = value.dictionary()
+        if self.call_prep_or_db_pred == "db_prep":
+            if value is None:
+                return value
+            if not isinstance(value, dict):
+                value = value.dictionary()
         return super(DynamicFileField, self).get_db_prep_value(
             value, connection, prepared
         )
