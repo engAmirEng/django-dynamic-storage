@@ -123,7 +123,7 @@ class DynamicFileField(JSONField, models.FileField):
                 return value
             if not isinstance(value, dict):
                 value = value.dictionary()
-            return models.JSONField.get_prep_value(self, value)
+            return JSONField.get_prep_value(self, value)
         return super(DynamicFileField, self).get_prep_value(value)
 
     def get_db_prep_value(self, value, connection, prepared=False):
