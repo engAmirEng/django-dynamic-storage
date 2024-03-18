@@ -46,5 +46,4 @@ class DynamicStorageMixin(ABC):
         return StorageClass(**probs["constructor"])
 
 
-class DynamicStorage(DynamicStorageMixin, Storage):
-    ...
+class DynamicStorage(DynamicStorageMixin, Storage): ...
