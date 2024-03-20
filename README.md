@@ -50,6 +50,7 @@ class MyDynamicStorage(DynamicStorageMixin, AnyStorage):
 		"""
 		here you should return a dictionary of key value pairs that 
 		later are passed to MyStorageDispatcher.
+		should be json serializable!!!
 		"""
 		return {"my_storage_identifier": "storage1", "named_param1": self.named_param1, "named_param2": self.named_param2, ...}
 ```
@@ -115,6 +116,23 @@ Not even a bit!
 
 #### HOW?
 
-We are just using the django's built in `JsonField` instead of `CharField`  to store more data (init\_params output) in addition to the path to the file.
+We are just using the django's built in `JsonField` instead of `CharField`  to store more data (init_params output) in addition to the path to the file.
 
 so no extra queries, no extra steps, no performance penalty.
+
+### How to migrate from django's native `FileField` and `ImageField`?
+
+the schema saved to the `JSONField` is like this:
+
+```json
+{
+  "name":  "this/is/the-path/to-the-file", 
+  "storage": {
+    "constructor": {
+      // here is the key values that passed to MyStorageDispatcher.get_storage as **kwargs
+    }
+  }
+}
+```
+so just write a [custom migration](https://docs.djangoproject.com/en/5.0/howto/writing-migrations/)
+that satisfies this schema
