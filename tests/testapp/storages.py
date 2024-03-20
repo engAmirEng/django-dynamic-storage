@@ -7,7 +7,7 @@ from dynamic_storage.test.storage import (
 
 class MyStorageDispatcher(AbstractBaseStorageDispatcher):
     @staticmethod
-    def get_storage(**kwargs):
+    def get_storage(instance, field, **kwargs):
         if kwargs.get("identifier") == "special_file_system_storage":
             return ASpecialFileSystemStorage(credential=kwargs["credential"])
         elif kwargs.get("identifier") == "another_special_fileSystem_storage":

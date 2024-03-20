@@ -31,9 +31,11 @@ from dynamic_storage.storage import AbstractBaseStorageDispatcher
 
 class MyStorageDispatcher(AbstractBaseStorageDispatcher):
     @staticmethod
-    def get_storage(**kwargs):
+    def get_storage(instance, field, **kwargs):
         if kwargs.get("my_storage_identifier") == "storage1":
             return MyDynamicStorage(named_param1=kwargs["named_param1"], named_param2=kwargs["named_param2"])
+        elif isinstance(instance, models.Profile) and field.name == "profile_pic":
+            return MyDynamicStorage(named_param1="my_hard_coded_var", named_param2="my_other_hard_coded_var")
         # elif ...
         raise NotImplementedError
 

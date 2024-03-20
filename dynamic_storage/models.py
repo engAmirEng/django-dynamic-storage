@@ -99,7 +99,9 @@ class DynamicFileDescriptor(FileDescriptor):
         if isinstance(file, dict):
             storage_prob: prob = file.get("storage")
             storage = (
-                DynamicStorage.init(storage_prob) if storage_prob else storage_prob
+                DynamicStorage.init(storage_prob, instance=instance, field=self.field)
+                if storage_prob
+                else storage_prob
             )
             attr = self.field.attr_class(
                 instance, self.field, file.get("name"), storage

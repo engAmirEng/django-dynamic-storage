@@ -5,6 +5,7 @@ from typing import TypedDict
 
 from django.conf import settings
 from django.core.files.storage import Storage
+from django.db import models
 from django.utils.module_loading import import_string
 
 
@@ -14,12 +15,18 @@ class prob(TypedDict):
 
 
 class AbstractBaseStorageDispatcher(ABC):
-    def __new__(cls, constructor: dict, **kwargs):
-        return cls.get_storage(**constructor)
+    def __new__(
+        cls,
+        constructor: dict,
+        instance: models.Model = None,
+        field: models.Field = None,
+        **kwargs,
+    ):
+        return cls.get_storage(instance=instance, field=field, **constructor)
 
     @staticmethod
     @abstractmethod
-    def get_storage(**kwargs) -> DynamicStorage: ...
+    def get_storage(instance, field, **kwargs) -> DynamicStorage: ...
 
 
 class DynamicStorageMixin(ABC):
@@ -47,11 +54,14 @@ class DynamicStorageMixin(ABC):
         }
 
     @classmethod
-    def init(cls, probs: prob) -> DynamicStorageMixin:
+    def init(cls, probs: prob, instance: models.Model, field) -> DynamicStorageMixin:
         """initialize storage"""
         StorageDispatcher = import_string(settings.STORAGE_DISPATCHER)
         return StorageDispatcher(
-            constructor=probs["constructor"], import_path=probs["import_path"]
+            constructor=probs["constructor"],
+            instance=instance,
+            field=field,
+            import_path=probs["import_path"],
         )
 
 
