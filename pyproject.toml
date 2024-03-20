@@ -22,7 +22,7 @@ classifiers = [
 packages = [{include = "dynamic_storage"}]
 
 [tool.poetry.dependencies]
-python = ">=3.7,<3.12"
+python = ">=3.7,<3.13"
 Django = ">=2.2,<5.1"
 
 
