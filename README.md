@@ -1,7 +1,7 @@
 ![tox CI](https://github.com/engAmirEng/django-dynamic-storage/actions/workflows/tox.yml/badge.svg)
 ![PyPi Version](https://img.shields.io/pypi/v/django-dynamic-storage)
 ![Python Versions](https://img.shields.io/pypi/pyversions/poetry)
-![Django Versions](https://img.shields.io/badge/django-2.2_|_3.0_|_3.1_|_3.2_|_4.0_|_4.1_|_4.2-green)
+![Django Versions](https://img.shields.io/badge/django-2.2_|_3.0_|_3.1_|_3.2_|_4.0_|_4.1_|_4.2_|_5.0-green)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/engAmirEng/django-dynamic-storage/main.svg)](https://results.pre-commit.ci/latest/github/engAmirEng/django-dynamic-storage/main)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![Imports: isort](https://img.shields.io/badge/%20imports-isort-%231674b1?style=flat&labelColor=ef8336)](https://pycqa.github.io/isort/)
