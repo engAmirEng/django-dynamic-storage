@@ -1,20 +1,38 @@
 from __future__ import annotations
 
-import importlib
 from abc import ABC, abstractmethod
-from typing import Any, Callable, Dict
+from typing import TypedDict
 
+from django.conf import settings
 from django.core.files.storage import Storage
+from django.db import models
+from django.utils.module_loading import import_string
 
 
-# {"import_path": str, "constructor": dict}
-prob = Dict[str, Any]
+class prob(TypedDict):
+    constructor: dict
+    import_path: str
+
+
+class AbstractBaseStorageDispatcher(ABC):
+    def __new__(
+        cls,
+        constructor: dict,
+        instance: models.Model = None,
+        field: models.Field = None,
+        **kwargs,
+    ):
+        return cls.get_storage(instance=instance, field=field, **constructor)
+
+    @staticmethod
+    @abstractmethod
+    def get_storage(instance, field, **kwargs) -> DynamicStorage: ...
 
 
 class DynamicStorageMixin(ABC):
     @abstractmethod
     def init_params(self) -> dict:
-        """parameters for calling __init__ on storage class"""
+        """parameters that are passed to get_storage method of your STORAGE_DISPATCHER"""
         ...
 
     def __eq__(self, other) -> bool:
@@ -36,14 +54,15 @@ class DynamicStorageMixin(ABC):
         }
 
     @classmethod
-    def init(cls, probs: prob) -> DynamicStorageMixin:
+    def init(cls, probs: prob, instance: models.Model, field) -> DynamicStorageMixin:
         """initialize storage"""
-        module_name = ".".join(probs["import_path"].split(".")[:-1])
-        class_name = probs["import_path"].split(".")[-1]
-        StorageClass: Callable = getattr(
-            importlib.import_module(module_name), class_name
+        StorageDispatcher = import_string(settings.STORAGE_DISPATCHER)
+        return StorageDispatcher(
+            constructor=probs["constructor"],
+            instance=instance,
+            field=field,
+            import_path=probs["import_path"],
         )
-        return StorageClass(**probs["constructor"])
 
 
 class DynamicStorage(DynamicStorageMixin, Storage): ...

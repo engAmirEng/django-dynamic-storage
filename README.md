@@ -25,19 +25,43 @@ pip install django-dynamic-storage
 in storage.py:
 
 ```python
+from django.utils.deconstruct import deconstructible
 from dynamic_storage.storage import DynamicStorageMixin
+from dynamic_storage.storage import AbstractBaseStorageDispatcher
+
+class MyStorageDispatcher(AbstractBaseStorageDispatcher):
+    @staticmethod
+    def get_storage(instance, field, **kwargs):
+        if kwargs.get("my_storage_identifier") == "storage1":
+            return MyDynamicStorage(named_param1=kwargs["named_param1"], named_param2=kwargs["named_param2"])
+        elif isinstance(instance, models.Profile) and field.name == "profile_pic":
+            return MyDynamicStorage(named_param1="my_hard_coded_var", named_param2="my_other_hard_coded_var")
+        # elif ...
+        raise NotImplementedError
+
 
 @deconstructible
 class MyDynamicStorage(DynamicStorageMixin, AnyStorage):
+    def __init__(self, named_param1, named_param2):
+        # AnyStorage stuff
+        super().__init__(named_param1, named_param2)
+        
 	def init_params(self) -> dict:
 		"""
 		here you should return a dictionary of key value pairs that 
-		later django-dynamic-storage could instantiate this class with
+		later are passed to MyStorageDispatcher.
 		"""
-		return {"named_param1": self.named_param1, "named_param2": self.named_param2, ...}
+		return {"my_storage_identifier": "storage1", "named_param1": self.named_param1, "named_param2": self.named_param2, ...}
 ```
 
 `AnyStorage` can be a storage that you define yourself or import from [django-storages](https://pypi.org/project/django-storages/).
+
+in settings.py:
+
+```python
+# path to your storage dispatcher
+STORAGE_DISPATCHER = "myapp.storage.MyStorageDispatcher"
+```
 
 in models.py:
 
@@ -49,8 +73,9 @@ class MyModel(models.Model):
 	DynamicFileField and DynamicImageField accept any options that django's native FileField and ImageField accept
 	"""
 	file = DynamicFileField()
-	image = DynamicWagtailImageField()
+	image = DynamicImageField()
 ```
+note that there is no Storage specified here!😎
 
 Now your logic to take control of the storage where your content is going to be saved to:
 

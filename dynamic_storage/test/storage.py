@@ -1,4 +1,5 @@
 from django.core.files.storage import FileSystemStorage
+from django.utils.deconstruct import deconstructible
 
 from dynamic_storage.storage import DynamicStorageMixin
 
@@ -12,6 +13,7 @@ class CredentialsError(Exception):
     pass
 
 
+@deconstructible
 class ASpecialFileSystemStorage(FileSystemStorage, DynamicStorageMixin):
     def __init__(self, credential):
         super(ASpecialFileSystemStorage, self).__init__()
@@ -20,9 +22,13 @@ class ASpecialFileSystemStorage(FileSystemStorage, DynamicStorageMixin):
         self.credential = credential
 
     def init_params(self) -> dict:
-        return {"credential": self.credential}
+        return {
+            "identifier": "special_file_system_storage",
+            "credential": self.credential,
+        }
 
 
+@deconstructible
 class AnotherSpecialFileSystemStorage(FileSystemStorage, DynamicStorageMixin):
     def __init__(self, token, secret):
         super(AnotherSpecialFileSystemStorage, self).__init__()
@@ -32,4 +38,8 @@ class AnotherSpecialFileSystemStorage(FileSystemStorage, DynamicStorageMixin):
         self.secret = secret
 
     def init_params(self) -> dict:
-        return {"token": self.token, "secret": self.secret}
+        return {
+            "identifier": "another_special_fileSystem_storage",
+            "token": self.token,
+            "secret": self.secret,
+        }

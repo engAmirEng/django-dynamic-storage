@@ -6,6 +6,9 @@ from django.core.exceptions import ImproperlyConfigured
 import environ
 
 
+# django-dynamic-storage
+STORAGE_DISPATCHER = "testapp.storages.MyStorageDispatcher"
+
 BASE_DIR = Path(__file__).resolve().parent
 env = environ.Env(JUST_POSTGRES=(bool, False), DATABASE_URL=(str, "sqlite://:memory:"))
 
