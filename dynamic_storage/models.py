@@ -49,6 +49,9 @@ class DynamicFieldFile(FieldFile):
             self._current_storage == self.destination_storage
             if self._current_storage
             else True
+        ), (
+            f"{self.instance}'s file is saved at {str(self._current_storage)} but the `destination_storage`"
+            f" is set to {str(self.destination_storage)} wile moving is not supported yet."
         )
 
         pre_dynamic_file_save.send(
